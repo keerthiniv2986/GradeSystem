@@ -1,6 +1,9 @@
-
 pipeline {
     agent any
+
+    environment {
+        PYTHON = 'C:/Users/91702/AppData/Local/Programs/Python/Python312-32/python.exe'
+    }
 
     stages {
         stage('Checkout') {
@@ -11,19 +14,25 @@ pipeline {
 
         stage('Check Python') {
             steps {
-                bat 'python --version'
+                bat '"%PYTHON%" --version'
+            }
+        }
+
+        stage('Create Virtual Environment') {
+            steps {
+                bat '"%PYTHON%" -m venv venv'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                bat 'python -m pip install -r requirements.txt'
+                bat 'venv/Scripts/python.exe -m pip install -r requirements.txt'
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat 'python -m pytest -v'
+                bat 'venv/Scripts/python.exe -m pytest -v'
             }
         }
     }
@@ -37,3 +46,4 @@ pipeline {
         }
     }
 }
+
